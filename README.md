@@ -1,5 +1,5 @@
 # Netflix Content Analysis Using SQL
-![netflix_logo](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pcmag.com%2Freviews%2Fnetflix&psig=AOvVaw2Hz_lUVwYrGh7ZLb2liWN2&ust=1754064210237000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCKjiwMO8544DFQAAAAAdAAAAABAE)
+![netflix_logo](https://i.pcmag.com/imagery/reviews/05cItXL96l4LE9n02WfDR0h-5.fit_lim.size_1050x591.v1582751026.png)
 ## 1. Objective
 
 This project aims to conduct a structured, data-driven analysis of Netflix's publicly available content catalogue using SQL. The goal is to extract trends related to content type, regional growth, genre popularity, metadata quality, and user-oriented attributes (e.g., cast, rating) to help inform strategic decisions in content acquisition, regional market expansion, and platform improvement.
