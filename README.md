@@ -59,7 +59,7 @@ GROUP BY
     genre;
 
 ```
-⸻
+
 
 ## Q2. Which 5 years saw the highest content addition in India?
 
@@ -82,9 +82,9 @@ ORDER BY
 LIMIT 5;
 
 ```
-⸻
 
-## Q3. Which movies are categorized as documentaries?
+
+## Q3. Which movies are categorised as documentaries?
 
 Identifying documentary content helps understand Netflix’s educational and non-fictional offerings.
 ```sql
@@ -93,7 +93,7 @@ FROM netflix
 WHERE listed_in ILIKE '%documentaries%';
 
 ```
-⸻
+
 
 ## Q4. Which titles lack director information?
 
@@ -108,7 +108,7 @@ WHERE director IS NULL;
 
 ## Q5. How many movies has Salman Khan featured in (last 10 years)?
 
-Analyzes star-driven content and helps evaluate actor influence on the platform.
+Analyses star-driven content and helps evaluate actor influence on the platform.
 ```sql
 SELECT *
 FROM netflix 
@@ -117,7 +117,7 @@ WHERE cast_ ILIKE '%salman khan%';
 -- AND release_year >= EXTRACT(YEAR FROM CURRENT_DATE) - 10;
 
 ```
-⸻
+
 
 ## Q6. Who are the top 10 most frequent actors in Indian content?
 
@@ -137,7 +137,7 @@ ORDER BY
 LIMIT 10;
 
 ```
-⸻
+
 
 ## Q7. What proportion of content contains violent keywords?
 
@@ -162,7 +162,7 @@ GROUP BY
     content_category;
 
 ```
-⸻
+
 
 ## Q8. What is the overall split between Movies and TV Shows?
 
@@ -177,11 +177,11 @@ GROUP BY
     content_type;
 
 ```
-⸻
+
 
 ## Q9. What are the most common maturity ratings for each content type?
 
-Analyzes audience targeting and helps assess content compliance by age group.
+Analyses audience targeting and helps assess content compliance by age group.
 ```sql
 SELECT DISTINCT ON (content_type)
     content_type,
@@ -195,7 +195,7 @@ ORDER BY
     content_type, total_count DESC;
 
 ```
-⸻
+
 
 ## Q10. Which movies were released in 2020?
 
@@ -208,7 +208,7 @@ WHERE
     AND release_year = 2020;
 
 ```
-⸻
+
 
 ## Q11. What are the top 5 countries by number of titles?
 
@@ -226,7 +226,7 @@ ORDER BY
 LIMIT 5;
 
 ```
-⸻
+
 
 ## Q12. What is the longest movie available on the platform?
 
@@ -239,7 +239,7 @@ WHERE
     AND duration = (SELECT MAX(duration) FROM netflix);
 
 ```
-⸻
+
 
 ## Q13. What content was added in the last 5 years?
 
@@ -251,7 +251,7 @@ WHERE
     date_imported >= CURRENT_DATE - INTERVAL '5 years';
 
 ```
-⸻
+
 
 ## Q14. What content is directed by Rajiv Chilaka?
 
@@ -262,7 +262,7 @@ FROM netflix
 WHERE director ILIKE '%Rajiv Chilaka%';
 
 ```
-⸻
+
 
 ## Q15. Which TV Shows have more than 5 seasons?
 ```sql
