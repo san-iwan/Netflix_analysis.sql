@@ -79,36 +79,36 @@ LIMIT 5;
 
 
 ```
-Q3. List All Movies That Are Documentaries
-
+## Q3. List All Movies That Are Documentaries
+```sql
 SELECT *
 FROM netflix
 WHERE listed_in ILIKE '%documentaries%';
 
-
+```
 ⸻
 
-Q4. Find All Content Without Directors
-
+## Q4. Find All Content Without Directors
+```sql
 SELECT title
 FROM netflix
 WHERE director IS NULL;
 
-
+```
 ⸻
 
-Q5. Count Movies Featuring Salman Khan in the Last 10 Years
-
+## Q5. Count Movies Featuring Salman Khan in the Last 10 Years
+```sql
 SELECT *
 FROM netflix
 WHERE cast_ ILIKE '%salman khan%';
 -- You may add a date filter based on your dataset
 
-
+```
 ⸻
 
-Q6. Top 10 Actors in Indian Content
-
+## Q6. Top 10 Actors in Indian Content
+```sql
 SELECT 
     unnest(string_to_array(cast_, ',')) AS actor,
     COUNT(*) AS total_content
@@ -122,11 +122,11 @@ ORDER BY
     total_content DESC
 LIMIT 10;
 
-
+```
 ⸻
 
-Q7. Categorize Content as “Good” or “Bad” Based on Description
-
+## Q7. Categorise Content as “Good” or “Bad” Based on Description
+```sql
 WITH content_categorized AS (
     SELECT 
         CASE 
@@ -144,11 +144,11 @@ FROM
 GROUP BY 
     content_category;
 
-
+```
 ⸻
 
-Q8. Count the Number of TV Shows and Movies
-
+## Q8. Count the Number of TV Shows and Movies
+```sql
 SELECT 
     content_type,
     COUNT(show_id) AS count
@@ -157,11 +157,11 @@ FROM
 GROUP BY 
     content_type;
 
-
+```
 ⸻
 
-Q9. Most Common Rating for TV Shows and Movies
-
+## Q9. Most Common Rating for TV Shows and Movies
+```sql
 SELECT DISTINCT ON (content_type)
     content_type,
     rating,
@@ -173,31 +173,31 @@ GROUP BY
 ORDER BY 
     content_type, total_count DESC;
 
-
+```
 ⸻
 
-Q10. List All Movies Released in 2020
-
+## Q10. List All Movies Released in 2020
+```sql
 SELECT *
 FROM netflix
 WHERE release_year = 2020 AND content_type = 'Movie';
 
-
+```
 ⸻
 
-Q11. TV Shows with More Than 5 Seasons
-
+## Q11. TV Shows with More Than 5 Seasons
+```sql
 SELECT *
 FROM netflix
 WHERE 
     content_type = 'TV Show' 
     AND SPLIT_PART(duration, ' ', 1)::int > 5;
 
-
+```
 ⸻
 
-Q12. Country with the Most Content
-
+## Q12. Country with the Most Content
+```sql
 SELECT 
     country, 
     COUNT(*) AS total_content
@@ -209,11 +209,11 @@ ORDER BY
     total_content DESC
 LIMIT 1;
 
-
+```
 ⸻
 
-Q13. Top 5 Directors by Number of Titles
-
+## Q13. Top 5 Directors by Number of Titles
+```sql
 SELECT 
     director, 
     COUNT(*) AS total_titles
@@ -227,11 +227,11 @@ ORDER BY
     total_titles DESC
 LIMIT 5;
 
-
+```
 ⸻
 
-Q14. Monthly Trend of Content Addition
-
+## Q14. Monthly Trend of Content Addition
+```sql
 SELECT 
     DATE_TRUNC('month', date_added) AS month,
     COUNT(*) AS content_added
@@ -244,11 +244,11 @@ GROUP BY
 ORDER BY 
     month;
 
-
+```
 ⸻
 
-Q15. Content Type and Rating Distribution in Indian Content
-
+## Q15. Content Type and Rating Distribution in Indian Content
+```sql
 SELECT 
     content_type,
     rating,
@@ -265,5 +265,5 @@ GROUP BY
 ORDER BY 
     percentage DESC;
 
-
+```
 
