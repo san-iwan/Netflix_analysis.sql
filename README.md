@@ -43,11 +43,12 @@ The dataset is structured in a single table named `netflix` and contains the fol
 
 
 
-## 4. SQL Analysis – Questions and Solutions
+## 4. SQL Analysis – Business Questions and Solutions
 
----
 
-### Q1. Count the content in each genre 
+## Q1. What is the distribution of content across different genres?
+
+Understanding genre distribution helps identify content diversity and dominant content themes on Netflix.
 ```sql
 SELECT 
     unnest(string_to_array(listed_in, ',')) AS genre,
@@ -58,27 +59,34 @@ GROUP BY
     genre;
 
 ```
-## Q2. Average Annual Content Added in India (Top 5 Years)
+⸻
+
+## Q2. Which 5 years saw the highest content addition in India?
+
+Reveals content growth trends in the Indian market, useful for regional strategy assessment.
 ```sql
 SELECT 
     EXTRACT(YEAR FROM date_imported) AS year,
     COUNT(*) AS total,
     ROUND(COUNT(*)::NUMERIC / (
         SELECT COUNT(*) FROM netflix WHERE country = 'India'
-    )::NUMERIC * 100, 2) AS avg_per_year
+    )::NUMERIC * 100, 2) AS avg_per_year  
 FROM 
-    netflix
+    netflix 
 WHERE 
     country = 'India'
 GROUP BY 
-    year
+    year 
 ORDER BY 
     avg_per_year DESC
 LIMIT 5;
 
-
 ```
-## Q3. List All Movies That Are Documentaries
+⸻
+
+## Q3. Which movies are categorized as documentaries?
+
+Identifying documentary content helps understand Netflix’s educational and non-fictional offerings.
 ```sql
 SELECT *
 FROM netflix
@@ -87,34 +95,41 @@ WHERE listed_in ILIKE '%documentaries%';
 ```
 ⸻
 
-## Q4. Find All Content Without Directors
+## Q4. Which titles lack director information?
+
+Helps assess metadata completeness, which is critical for accurate recommendations and analytics.
 ```sql
 SELECT title
-FROM netflix
+FROM netflix 
 WHERE director IS NULL;
 
 ```
 ⸻
 
-## Q5. Count Movies Featuring Salman Khan in the Last 10 Years
+## Q5. How many movies has Salman Khan featured in (last 10 years)?
+
+Analyzes star-driven content and helps evaluate actor influence on the platform.
 ```sql
 SELECT *
-FROM netflix
+FROM netflix 
 WHERE cast_ ILIKE '%salman khan%';
--- You may add a date filter based on your dataset
+-- Optional:
+-- AND release_year >= EXTRACT(YEAR FROM CURRENT_DATE) - 10;
 
 ```
 ⸻
 
-## Q6. Top 10 Actors in Indian Content
+## Q6. Who are the top 10 most frequent actors in Indian content?
+
+Identifies the most prominent and bankable actors in regional content.
 ```sql
-SELECT 
+SELECT
     unnest(string_to_array(cast_, ',')) AS actor,
     COUNT(*) AS total_content
 FROM 
     netflix
 WHERE 
-    country ILIKE '%India%'
+    country ILIKE '%India%' 
 GROUP BY 
     actor
 ORDER BY 
@@ -124,10 +139,13 @@ LIMIT 10;
 ```
 ⸻
 
-## Q7. Categorise Content as “Good” or “Bad” Based on Description
+## Q7. What proportion of content contains violent keywords?
+
+Content categorization based on keywords helps monitor viewer safety and content sensitivity.
 ```sql
-WITH content_categorized AS (
+WITH new_table AS (
     SELECT 
+        content_type,
         CASE 
             WHEN description ILIKE '%kill%' OR description ILIKE '%violence%' THEN 'bad_content'
             ELSE 'good_content'
@@ -139,27 +157,31 @@ SELECT
     content_category,
     COUNT(*)
 FROM 
-    content_categorized
+    new_table
 GROUP BY 
     content_category;
 
 ```
 ⸻
 
-## Q8. Count the Number of TV Shows and Movies
+## Q8. What is the overall split between Movies and TV Shows?
+
+Understanding the content format mix helps evaluate platform focus.
 ```sql
 SELECT 
     content_type,
-    COUNT(show_id) AS count
+    COUNT(show_id) AS counts
 FROM 
-    netflix
+    netflix 
 GROUP BY 
     content_type;
 
 ```
 ⸻
 
-## Q9. Most Common Rating for TV Shows and Movies
+## Q9. What are the most common maturity ratings for each content type?
+
+Analyzes audience targeting and helps assess content compliance by age group.
 ```sql
 SELECT DISTINCT ON (content_type)
     content_type,
@@ -175,94 +197,80 @@ ORDER BY
 ```
 ⸻
 
-## Q10. List All Movies Released in 2020
-```sql
-SELECT *
-FROM netflix
-WHERE release_year = 2020 AND content_type = 'Movie';
+## Q10. Which movies were released in 2020?
 
-```
-⸻
-
-## Q11. TV Shows with More Than 5 Seasons
+Provides insights into recent content additions and catalog freshness.
 ```sql
 SELECT *
 FROM netflix
 WHERE 
-    content_type = 'TV Show' 
-    AND SPLIT_PART(duration, ' ', 1)::int > 5;
+    content_type = 'Movie'
+    AND release_year = 2020;
 
 ```
 ⸻
 
-## Q12. Country with the Most Content
+## Q11. What are the top 5 countries by number of titles?
+
+Indicates Netflix’s regional content strength and international content focus.
 ```sql
 SELECT 
-    country, 
+    unnest(string_to_array(country, ',')) AS country_,
     COUNT(*) AS total_content
 FROM 
     netflix
 GROUP BY 
-    country
+    country_
 ORDER BY 
     total_content DESC
-LIMIT 1;
-
-```
-⸻
-
-## Q13. Top 5 Directors by Number of Titles
-```sql
-SELECT 
-    director, 
-    COUNT(*) AS total_titles
-FROM 
-    netflix
-WHERE 
-    director IS NOT NULL
-GROUP BY 
-    director
-ORDER BY 
-    total_titles DESC
 LIMIT 5;
 
 ```
 ⸻
 
-## Q14. Monthly Trend of Content Addition
+## Q12. What is the longest movie available on the platform?
+
+Highlights unique content that may stand out due to its duration or storytelling format.
 ```sql
-SELECT 
-    DATE_TRUNC('month', date_added) AS month,
-    COUNT(*) AS content_added
-FROM 
-    netflix
+SELECT *
+FROM netflix
 WHERE 
-    date_added IS NOT NULL
-GROUP BY 
-    month
-ORDER BY 
-    month;
+    content_type = 'Movie'
+    AND duration = (SELECT MAX(duration) FROM netflix);
 
 ```
 ⸻
 
-## Q15. Content Type and Rating Distribution in Indian Content
+## Q13. What content was added in the last 5 years?
+
+Tracks recent expansion and helps evaluate platform growth.
 ```sql
-SELECT 
-    content_type,
-    rating,
-    COUNT(*) AS count,
-    ROUND(COUNT(*)::NUMERIC / (
-        SELECT COUNT(*) FROM netflix WHERE country ILIKE '%India%'
-    ) * 100, 2) AS percentage
-FROM 
-    netflix
+SELECT *
+FROM netflix 
 WHERE 
-    country ILIKE '%India%'
-GROUP BY 
-    content_type, rating
-ORDER BY 
-    percentage DESC;
+    date_imported >= CURRENT_DATE - INTERVAL '5 years';
 
 ```
+⸻
 
+## Q14. What content is directed by Rajiv Chilaka?
+
+Used for analysing creator-specific catalogues or fan-driven recommendations.
+```sql
+SELECT *
+FROM netflix 
+WHERE director ILIKE '%Rajiv Chilaka%';
+
+```
+⸻
+
+## Q15. Which TV Shows have more than 5 seasons?
+```sql
+Identifies long-running or high-engagement series useful for retention-focused analysis.
+
+SELECT *
+FROM netflix
+WHERE 
+    content_type = 'TV Show'
+    AND SPLIT_PART(duration, ' ', 1)::INT > 5;
+```
