@@ -47,8 +47,7 @@ The dataset is structured in a single table named `netflix` and contains the fol
 
 ---
 
-### Q1. Count the Number of Items in Each Genre
-
+### Q1. Count the content in each genre 
 ```sql
 SELECT 
     unnest(string_to_array(listed_in, ',')) AS genre,
